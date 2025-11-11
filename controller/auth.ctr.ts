@@ -28,7 +28,6 @@ export const register = async (req: Request, res: Response): Promise<Response | 
     } catch (error: any) {
         res.status(500).json({ message: error.message })
         console.log(error);
-        
     }
 }
 
@@ -41,7 +40,7 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
             return res.status(400).json({ message: "Invalid credentials" })
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password)
+        const isPasswordValid = await bcrypt.compare(password,user.dataValues.password)
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid credentials" })
         }
@@ -60,6 +59,8 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
         })
     } catch (error: any) {
         res.status(500).json({ message: error.message })
+        console.log(error);
+        
     }
 }
 

@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken"
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     try {
         const token = req.cookies?.AccessToken
+
+        console.log(token);
+        
         
         if (!token) {
             res.status(401).json({ message: "No token provided" })
