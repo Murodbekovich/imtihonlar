@@ -2,5 +2,5 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateApplicationDto } from './create-application.dto';
 
 export class UpdateApplicationDto extends PartialType(CreateApplicationDto) {
-  status?: 'pending' | 'approved' | 'rejected';
+  status?: 'pending' | 'approved' | 'rejected'
 }

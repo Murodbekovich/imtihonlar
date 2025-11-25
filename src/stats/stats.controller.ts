@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { StatsService } from './stats.service';
+import { Controller, Get } from '@nestjs/common'
+import { StatsService } from './stats.service'
 
 @Controller('stats')
 export class StatsController {
@@ -7,11 +7,11 @@ export class StatsController {
 
   @Get('overview')
   overview() {
-    return this.service.overview();
+    return this.service.overview()
   }
 
   @Get('attendance')
   attendance() {
-    return this.service.attendanceSummary();
+    return this.service.attendanceSummary()
   }
 }
