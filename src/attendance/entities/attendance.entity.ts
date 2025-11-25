@@ -1,17 +1,6 @@
-import {
-  CreationOptional,
-  InferAttributes,
-  InferCreationAttributes
-} from 'sequelize';
+import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-import {
-  Column,
-  Model,
-  Table,
-  DataType,
-  ForeignKey,
-  BelongsTo
-} from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Student } from '../../student/entities/student.entity';
 
 @Table({ tableName: 'attendance', timestamps: true, underscored: true })

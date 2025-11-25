@@ -1,15 +1,6 @@
-import {
-  CreationOptional,
-  InferAttributes,
-  InferCreationAttributes
-} from 'sequelize';
+import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-import {
-  Column,
-  Model,
-  Table,
-  DataType
-} from 'sequelize-typescript';
+import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table({ tableName: 'shifts', timestamps: true, underscored: true })
 export class Shift extends Model<
