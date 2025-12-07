@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ShippingEntity } from './entities/shipping.entity';
-import { CreateShippingDto } from './dto/create-shipping.dto';
-import { UpdateShippingDto } from './dto/update-shipping.dto';
 
 @Injectable()
 export class ShippingService {
@@ -12,8 +10,9 @@ export class ShippingService {
     private readonly repo: Repository<ShippingEntity>,
   ) {}
 
-  create(dto: CreateShippingDto) {
-    return this.repo.save(dto);
+  create(dto: any) {
+    const shipping = this.repo.create(dto);
+    return this.repo.save(shipping);
   }
 
   findAll() {
@@ -21,14 +20,10 @@ export class ShippingService {
   }
 
   findOne(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.repo.findOne({ where: { id } });
   }
 
-  update(id: number, dto: UpdateShippingDto) {
-    return this.repo.update(id, dto);
-  }
-
-  delete(id: number) {
+  remove(id: number) {
     return this.repo.delete(id);
   }
 }

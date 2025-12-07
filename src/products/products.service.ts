@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from './entities/product.entity';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -12,8 +10,9 @@ export class ProductsService {
     private readonly repo: Repository<ProductEntity>,
   ) {}
 
-  create(dto: CreateProductDto) {
-    return this.repo.save(dto);
+  create(dto: any) {
+    const product = this.repo.create(dto);
+    return this.repo.save(product);
   }
 
   findAll() {
@@ -24,11 +23,18 @@ export class ProductsService {
     return this.repo.findOneBy({ id });
   }
 
-  update(id: number, dto: UpdateProductDto) {
-    return this.repo.update(id, dto);
+  async update(id: number, dto: any) {
+    const product = await this.repo.findOneBy({ id });
+    if (!product) throw new NotFoundException('Product not found');
+
+    Object.assign(product, dto);
+    return this.repo.save(product);
   }
 
-  delete(id: number) {
-    return this.repo.delete(id);
+  async remove(id: number) {
+    const product = await this.repo.findOneBy({ id });
+    if (!product) throw new NotFoundException('Product not found');
+
+    return this.repo.remove(product);
   }
 }

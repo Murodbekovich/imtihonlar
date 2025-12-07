@@ -1,32 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SellerEntity } from './entities/seller.entity';
+import { CreateSellerDto } from './dto/create-seller.dto';
+import { UpdateSellerDto } from './dto/update-seller.dto';
 
 @Injectable()
 export class SellersService {
   constructor(
     @InjectRepository(SellerEntity)
-    private sellerRepo: Repository<SellerEntity>,
+    private readonly repo: Repository<SellerEntity>,
   ) {}
 
-  create(dto: any) {
-    return this.sellerRepo.save(dto);
+  async create(dto: CreateSellerDto) {
+    const seller = this.repo.create(dto);
+    return this.repo.save(seller);
   }
 
-  findAll() {
-    return this.sellerRepo.find();
+  async findAll() {
+    return this.repo.find();
   }
 
-  findOne(id: number) {
-    return this.sellerRepo.findOne({ where: { id } });
+  async findOne(id: number) {
+    const seller = await this.repo.findOneBy({ id });
+    if (!seller) throw new NotFoundException('Seller topilmadi');
+    return seller;
   }
 
-  update(id: number, dto: any) {
-    return this.sellerRepo.update(id, dto);
+  async update(id: number, dto: UpdateSellerDto) {
+    const seller = await this.findOne(id);
+    await this.repo.update(id, dto);
+    return { message: 'Seller yangilandi' };
   }
 
-  remove(id: number) {
-    return this.sellerRepo.delete(id);
+  async delete(id: number) {
+    const seller = await this.findOne(id);
+    await this.repo.delete(id);
+    return { message: 'Seller o‘chirildi' };
   }
 }

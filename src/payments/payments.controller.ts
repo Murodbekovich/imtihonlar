@@ -1,8 +1,12 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 
+@ApiTags('Payments')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly service: PaymentsService) {}
@@ -22,13 +26,8 @@ export class PaymentsController {
     return this.service.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePaymentDto) {
-    return this.service.update(+id, dto);
-  }
-
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.service.delete(+id);
+  remove(@Param('id') id: string) {
+    return this.service.remove(+id);
   }
 }

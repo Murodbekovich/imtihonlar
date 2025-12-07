@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReviewEntity } from './entities/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
 
 @Injectable()
 export class ReviewsService {
@@ -13,7 +12,8 @@ export class ReviewsService {
   ) {}
 
   create(dto: CreateReviewDto) {
-    return this.repo.save(dto);
+    const review = this.repo.create(dto);
+    return this.repo.save(review);
   }
 
   findAll() {
@@ -21,18 +21,13 @@ export class ReviewsService {
   }
 
   findOne(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.repo.findOne({ where: { id } });
   }
 
-  findByProduct(productId: number) {
-    return this.repo.find({ where: { productId } });
-  }
+  async remove(id: number) {
+    const review = await this.findOne(id);
+    if (!review) throw new NotFoundException('Review not found');
 
-  update(id: number, dto: UpdateReviewDto) {
-    return this.repo.update(id, dto);
-  }
-
-  delete(id: number) {
-    return this.repo.delete(id);
+    return this.repo.remove(review);
   }
 }

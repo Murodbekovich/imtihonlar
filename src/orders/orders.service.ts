@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { OrderEntity } from './entities/order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderStatus } from './enums/order-status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -12,23 +13,35 @@ export class OrdersService {
     private readonly repo: Repository<OrderEntity>,
   ) {}
 
-  create(dto: CreateOrderDto) {
-    return this.repo.save(dto);
+  create(dto: CreateOrderDto, userId: number) {
+    const order = this.repo.create({
+      ...dto,
+      user: { id: userId },
+      status: OrderStatus.PENDING,
+    });
+
+    return this.repo.save(order);
   }
 
   findAll() {
-    return this.repo.find();
+    return this.repo.find({ relations: ['user'] });
+  }
+
+  findByUser(userId: number) {
+    return this.repo.find({
+      where: { user: { id: userId } },
+    });
   }
 
   findOne(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.repo.findOne({ where: { id } });
   }
 
   update(id: number, dto: UpdateOrderDto) {
     return this.repo.update(id, dto);
   }
 
-  delete(id: number) {
+  remove(id: number) {
     return this.repo.delete(id);
   }
 }

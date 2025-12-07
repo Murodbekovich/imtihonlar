@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaymentEntity } from './entities/payment.entity';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -13,7 +12,8 @@ export class PaymentsService {
   ) {}
 
   create(dto: CreatePaymentDto) {
-    return this.repo.save(dto);
+    const payment = this.repo.create(dto);
+    return this.repo.save(payment);
   }
 
   findAll() {
@@ -21,14 +21,14 @@ export class PaymentsService {
   }
 
   findOne(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.repo.findOne({ where: { id } });
   }
 
-  update(id: number, dto: UpdatePaymentDto) {
-    return this.repo.update(id, dto);
-  }
-
-  delete(id: number) {
-    return this.repo.delete(id);
+  async remove(id: number) {
+    const payment = await this.findOne(id);
+    if (!payment) {
+      throw new NotFoundException('Payment not found');
+    }
+    return this.repo.remove(payment);
   }
 }

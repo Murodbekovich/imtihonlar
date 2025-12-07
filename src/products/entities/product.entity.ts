@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  CreateDateColumn,
+} from 'typeorm';
+import { OrderEntity } from '../../orders/entities/order.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -14,6 +21,12 @@ export class ProductEntity {
   @Column()
   price: number;
 
-  @Column({ default: 0 })
+  @Column()
   quantity: number;
+
+  @ManyToMany(() => OrderEntity)
+  orders: OrderEntity[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

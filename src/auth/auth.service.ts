@@ -1,60 +1,55 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-
-import { UserEntity } from '../users/entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepo: Repository<UserEntity>,
-
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
-async register(dto: any) {
-  const exists = await this.userRepo.findOne({
-    where: { email: dto.email },
-  });
+  async register(dto: RegisterDto) {
+    const existingUser = await this.usersService.findByEmail(dto.email);
+    if (existingUser) {
+      throw new UnauthorizedException('User already exists');
+    }
 
-  if (exists) {
-    throw new BadRequestException('User already exists');
-  }
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-  const hash = await bcrypt.hash(dto.password, 10);
-
-  const user = this.userRepo.create({
-    email: dto.email,
-    fullName: dto.fullName,
-    password: hash,
-  });
-
-  await this.userRepo.save(user);
-
-  return {
-    id: user.id,
-    email: user.email,
-  };
-}
-
-  async login(email: string, password: string) {
-    const user = await this.userRepo.findOne({ where: { email } });
-
-    if (!user) throw new UnauthorizedException('User not found');
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new UnauthorizedException('Wrong password');
-
-    const token = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
+    const user = await this.usersService.create({
+      fullName: dto.fullName,
+      email: dto.email,
+      password: hashedPassword,
     });
 
     return {
+      message: 'User registered successfully',
+      user,
+    };
+  }
+
+  async login(dto: LoginDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new UnauthorizedException('Email or password incorrect');
+    }
+
+    const isMatch = await bcrypt.compare(dto.password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Email or password incorrect');
+    }
+
+    const payload = { id: user.id, role: user.role };
+
+    const token = this.jwtService.sign(payload);
+
+    return {
       access_token: token,
+      user,
     };
   }
 }

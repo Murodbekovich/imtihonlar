@@ -1,14 +1,17 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { AddressService } from './address.service';
-import { CreateAddressDto } from './dto/create-address.dto';
-import { UpdateAddressDto } from './dto/update-address.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Address')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('address')
 export class AddressController {
   constructor(private readonly service: AddressService) {}
 
   @Post()
-  create(@Body() dto: CreateAddressDto) {
+  create(@Body() dto: any) {
     return this.service.create(dto);
   }
 
@@ -17,23 +20,8 @@ export class AddressController {
     return this.service.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
-  }
-
-  @Get('user/:userId')
-  findUserAddress(@Param('userId') userId: string) {
-    return this.service.findUserAddress(+userId);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateAddressDto) {
-    return this.service.update(+id, dto);
-  }
-
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.service.delete(+id);
+  remove(@Param('id') id: string) {
+    return this.service.remove(+id);
   }
 }

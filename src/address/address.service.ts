@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AddressEntity } from './entities/address.entity';
 import { CreateAddressDto } from './dto/create-address.dto';
-import { UpdateAddressDto } from './dto/update-address.dto';
 
 @Injectable()
 export class AddressService {
@@ -12,27 +11,21 @@ export class AddressService {
     private readonly repo: Repository<AddressEntity>,
   ) {}
 
-  create(dto: CreateAddressDto) {
-    return this.repo.save(dto);
+  async create(dto: CreateAddressDto) {
+    const address = this.repo.create(dto);
+    return this.repo.save(address);
   }
 
-  findAll() {
-    return this.repo.find();
+  async findAll() {
+    return this.repo.find({
+      relations: ['user'],
+    });
   }
 
-  findOne(id: number) {
-    return this.repo.findOneBy({ id });
-  }
+  async remove(id: number) {
+    const address = await this.repo.findOne({ where: { id } });
+    if (!address) throw new NotFoundException('Address not found');
 
-  findUserAddress(userId: number) {
-    return this.repo.find({ where: { userId } });
-  }
-
-  update(id: number, dto: UpdateAddressDto) {
-    return this.repo.update(id, dto);
-  }
-
-  delete(id: number) {
-    return this.repo.delete(id);
+    return this.repo.remove(address);
   }
 }

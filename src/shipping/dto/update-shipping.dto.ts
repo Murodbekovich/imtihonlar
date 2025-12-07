@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateShippingDto } from './create-shipping.dto';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ShippingStatus } from '../entities/shipping.entity';
 
-export class UpdateShippingDto extends PartialType(CreateShippingDto) {}
+export class UpdateShippingDto {
+  @IsOptional()
+  @IsEnum(ShippingStatus)
+  status?: ShippingStatus;
+}

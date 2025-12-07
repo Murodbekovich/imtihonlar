@@ -1,32 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdminEntity } from './entities/admin.entity';
-
+import { UpdateAdminDto } from './dto/update-admin.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 @Injectable()
 export class AdminsService {
   constructor(
     @InjectRepository(AdminEntity)
-    private adminRepo: Repository<AdminEntity>,
+    private readonly repo: Repository<AdminEntity>,
   ) {}
 
-  create(dto: any) {
-    return this.adminRepo.save(dto);
+  async create(dto: CreateAdminDto) {
+    return this.repo.save(this.repo.create(dto));
   }
 
-  findAll() {
-    return this.adminRepo.find();
+  async findAll() {
+    return this.repo.find();
   }
 
-  findOne(id: number) {
-    return this.adminRepo.findOne({ where: { id } });
+  async findOne(id: number) {
+    const admin = await this.repo.findOneBy({ id });
+    if (!admin) throw new NotFoundException('Admin topilmadi');
+    return admin;
   }
 
-  update(id: number, dto: any) {
-    return this.adminRepo.update(id, dto);
+  async update(id: number, dto: UpdateAdminDto) {
+    await this.findOne(id);
+    await this.repo.update(id, dto);
+    return { message: 'Admin yangilandi' };
   }
 
-  remove(id: number) {
-    return this.adminRepo.delete(id);
+  async delete(id: number) {
+    await this.findOne(id);
+    await this.repo.delete(id);
+    return { message: 'Admin o‘chirildi' };
   }
 }

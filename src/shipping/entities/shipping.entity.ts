@@ -1,6 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { OrderEntity } from '../../orders/entities/order.entity';
 
-@Entity('shipping')
+export enum ShippingStatus {
+  PENDING = 'pending',
+  SHIPPED = 'shipped',
+  DELIVERED = 'delivered',
+}
+
+@Entity('shippings')
 export class ShippingEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,9 +24,16 @@ export class ShippingEntity {
   @Column()
   address: string;
 
-  @Column({ default: 'pending' })
-  status: string;
+  @Column({
+    type: 'enum',
+    enum: ShippingStatus,
+    default: ShippingStatus.PENDING,
+  })
+  status: ShippingStatus;
 
-  @Column({ nullable: true })
-  phone: string;
+  @OneToOne(() => OrderEntity, (order) => order.shipping, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'orderId' })
+  order: OrderEntity;
 }
