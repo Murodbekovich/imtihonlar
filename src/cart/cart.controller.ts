@@ -1,39 +1,39 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Delete,
-  Param,
-  Body,
-} from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
+import { UpdateCartDto } from './dto/update-cart.dto';
 
 @Controller('cart')
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly service: CartService) {}
 
-  // ✅ Savatga qo‘shish
   @Post()
-  add(@Body() dto: CreateCartDto) {
-    return this.cartService.addToCart(dto);
+  create(@Body() dto: CreateCartDto) {
+    return this.service.create(dto);
   }
 
-  // ✅ User savati
-  @Get(':userId')
-  getUserCart(@Param('userId') userId: number) {
-    return this.cartService.getUserCart(Number(userId));
+  @Get()
+  findAll() {
+    return this.service.findAll();
   }
 
-  // ✅ Bitta item o‘chirish
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.service.findByUser(+userId);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateCartDto) {
+    return this.service.update(+id, dto);
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.cartService.removeFromCart(Number(id));
+  delete(@Param('id') id: string) {
+    return this.service.delete(+id);
   }
 
-  // ✅ User savatini tozalash
   @Delete('clear/:userId')
-  clear(@Param('userId') userId: number) {
-    return this.cartService.clearUserCart(Number(userId));
+  clear(@Param('userId') userId: string) {
+    return this.service.clearUserCart(+userId);
   }
 }

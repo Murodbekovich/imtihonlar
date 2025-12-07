@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('orders')
 export class OrderEntity {
@@ -16,15 +11,6 @@ export class OrderEntity {
   @Column()
   totalPrice: number;
 
-  @Column({ default: 'PENDING' })
+  @Column({ default: 'pending' })
   status: string;
-
-  @Column()
-  addressId: number;
-
-  @Column()
-  shippingMethod: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

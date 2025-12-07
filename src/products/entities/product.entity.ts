@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('products')
 export class ProductEntity {
@@ -13,18 +8,12 @@ export class ProductEntity {
   @Column()
   title: string;
 
-  @Column('text')
+  @Column()
   description: string;
 
   @Column()
   price: number;
 
-  @Column()
-  image: string;
-
-  @Column()
-  sellerId: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ default: 0 })
+  quantity: number;
 }

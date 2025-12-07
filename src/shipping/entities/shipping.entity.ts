@@ -6,11 +6,14 @@ export class ShippingEntity {
   id: number;
 
   @Column()
-  name: string;
+  orderId: number;
 
   @Column()
-  price: number;
+  address: string;
 
-  @Column()
-  estimatedDays: string;
+  @Column({ default: 'pending' })
+  status: string;
+
+  @Column({ nullable: true })
+  phone: string;
 }

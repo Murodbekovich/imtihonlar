@@ -3,31 +3,40 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CartEntity } from './entities/cart.entity';
 import { CreateCartDto } from './dto/create-cart.dto';
+import { UpdateCartDto } from './dto/update-cart.dto';
 
 @Injectable()
 export class CartService {
   constructor(
     @InjectRepository(CartEntity)
-    private cartRepo: Repository<CartEntity>,
+    private readonly repo: Repository<CartEntity>,
   ) {}
 
-  addToCart(dto: CreateCartDto) {
-    const item = this.cartRepo.create(dto);
-    return this.cartRepo.save(item);
+  create(dto: CreateCartDto) {
+    return this.repo.save(dto);
   }
 
-  getUserCart(userId: number) {
-    return this.cartRepo.find({
-      where: { userId },
-      order: { createdAt: 'DESC' },
-    });
+  findAll() {
+    return this.repo.find();
   }
 
-  removeFromCart(id: number) {
-    return this.cartRepo.delete(id);
+  findByUser(userId: number) {
+    return this.repo.find({ where: { userId } });
+  }
+
+  findOne(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
+  update(id: number, dto: UpdateCartDto) {
+    return this.repo.update(id, dto);
+  }
+
+  delete(id: number) {
+    return this.repo.delete(id);
   }
 
   clearUserCart(userId: number) {
-    return this.cartRepo.delete({ userId });
+    return this.repo.delete({ userId });
   }
 }

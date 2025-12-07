@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('payments')
 export class PaymentEntity {
@@ -14,14 +9,11 @@ export class PaymentEntity {
   orderId: number;
 
   @Column()
-  method: string; // CARD | PAYPAL
-
-  @Column()
   amount: number;
 
-  @Column({ default: 'PAID' })
-  status: string;
+  @Column()
+  method: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ default: 'pending' })
+  status: string;
 }

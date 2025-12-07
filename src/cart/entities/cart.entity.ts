@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('cart')
 export class CartEntity {
@@ -18,7 +13,4 @@ export class CartEntity {
 
   @Column()
   quantity: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

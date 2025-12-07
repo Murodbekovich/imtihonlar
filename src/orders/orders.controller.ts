@@ -1,31 +1,34 @@
-import { Controller, Post, Get, Param, Body, Patch } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly service: OrdersService) {}
 
   @Post()
   create(@Body() dto: CreateOrderDto) {
-    return this.ordersService.create(dto);
+    return this.service.create(dto);
   }
 
   @Get()
   findAll() {
-    return this.ordersService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.ordersService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.service.findOne(+id);
   }
 
-  @Patch(':id/status')
-  updateStatus(
-    @Param('id') id: number,
-    @Body() body: { status: string },
-  ) {
-    return this.ordersService.updateStatus(id, body.status);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateOrderDto) {
+    return this.service.update(+id, dto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.service.delete(+id);
   }
 }

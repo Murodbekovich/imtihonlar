@@ -11,12 +11,11 @@ import { UserEntity } from '../users/entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule, // ✅ MUHIM! Jwt uchun kerak bo‘ladi
-
+    ConfigModule,
     TypeOrmModule.forFeature([UserEntity]),
 
     JwtModule.registerAsync({
-      imports: [ConfigModule], // ✅ BU YERDA BO‘LISHI SHART
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (cs: ConfigService) => ({
         secret: cs.get('JWT_SECRET'),
@@ -31,9 +30,9 @@ import { UserEntity } from '../users/entities/user.entity';
 
   providers: [
     AuthService,
-    JwtStrategy, // ✅ STRATEGY PROVIDERS ICHIDA BO‘LISHI SHART
+    JwtStrategy,
   ],
 
-  exports: [AuthService, JwtModule], // ✅ BOSHQA MODULLAR UCHUN
+  exports: [AuthService, JwtModule],
 })
-export class AuthModule {}
+export class AuthModule { }
