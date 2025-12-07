@@ -5,25 +5,19 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('cart')
+export class CartEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
-
-  @Column('text')
-  description: string;
+  userId: number;
 
   @Column()
-  price: number;
+  productId: number;
 
   @Column()
-  image: string;
-
-  @Column()
-  sellerId: number;
+  quantity: number;
 
   @CreateDateColumn()
   createdAt: Date;

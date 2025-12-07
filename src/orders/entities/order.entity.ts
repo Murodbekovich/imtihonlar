@@ -5,25 +5,25 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('orders')
+export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
-
-  @Column('text')
-  description: string;
+  userId: number;
 
   @Column()
-  price: number;
+  totalPrice: number;
+
+  @Column({ default: 'PENDING' })
+  status: string;
 
   @Column()
-  image: string;
+  addressId: number;
 
   @Column()
-  sellerId: number;
+  shippingMethod: string;
 
   @CreateDateColumn()
   createdAt: Date;

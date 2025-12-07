@@ -5,25 +5,22 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('payments')
+export class PaymentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
-
-  @Column('text')
-  description: string;
+  orderId: number;
 
   @Column()
-  price: number;
+  method: string; // CARD | PAYPAL
 
   @Column()
-  image: string;
+  amount: number;
 
-  @Column()
-  sellerId: number;
+  @Column({ default: 'PAID' })
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

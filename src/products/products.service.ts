@@ -1,38 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { Product } from './entities/product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ProductEntity } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [
-    {
-      id: 1,
-      name: 'iPhone 14 Pro',
-      price: 1200,
-      image: '/iphone.png',
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S22',
-      price: 900,
-      image: '/s22.png',
-      rating: 4.5,
-    },
-  ];
-
-  findAll() {
-    return this.products;
-  }
+  constructor(
+    @InjectRepository(ProductEntity)
+    private productRepo: Repository<ProductEntity>,
+  ) {}
 
   create(dto: CreateProductDto) {
-    const newProduct: Product = {
-      id: this.products.length + 1,
-      rating: dto.rating ?? 5,
-      ...dto,
-    };
+    const product = this.productRepo.create(dto);
+    return this.productRepo.save(product);
+  }
 
-    this.products.push(newProduct);
-    return newProduct;
+  findAll() {
+    return this.productRepo.find({
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  findOne(id: number) {
+    return this.productRepo.findOne({
+      where: { id },
+    });
+  }
+
+  delete(id: number) {
+    return this.productRepo.delete(id);
   }
 }

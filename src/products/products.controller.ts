@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 
@@ -6,13 +13,23 @@ import { CreateProductDto } from './dto/create-product.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Post()
+  create(@Body() dto: CreateProductDto) {
+    return this.productsService.create(dto);
+  }
+
   @Get()
   findAll() {
     return this.productsService.findAll();
   }
 
-  @Post()
-  create(@Body() body: CreateProductDto) {
-    return this.productsService.create(body);
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.productsService.findOne(Number(id));
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.productsService.delete(Number(id));
   }
 }

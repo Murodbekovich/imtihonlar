@@ -5,25 +5,25 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('reviews')
+export class ReviewEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  productId: number;
+
+  @Column()
+  userId: number;
+
+  @Column()
+  username: string;
+
+  @Column()
+  rating: number; // 1 to 5
 
   @Column('text')
-  description: string;
-
-  @Column()
-  price: number;
-
-  @Column()
-  image: string;
-
-  @Column()
-  sellerId: number;
+  comment: string;
 
   @CreateDateColumn()
   createdAt: Date;
