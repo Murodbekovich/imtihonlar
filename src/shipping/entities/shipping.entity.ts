@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
+import {Column, Entity,PrimaryGeneratedColumn, OneToOne, JoinColumn,} from 'typeorm';
 import { OrderEntity } from '../../orders/entities/order.entity';
 
 export enum ShippingStatus {

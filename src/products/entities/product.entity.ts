@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  CreateDateColumn,
-} from 'typeorm';
+import {Entity,PrimaryGeneratedColumn,Column, ManyToMany, CreateDateColumn,} from 'typeorm';
 import { OrderEntity } from '../../orders/entities/order.entity';
 
 @Entity('products')
