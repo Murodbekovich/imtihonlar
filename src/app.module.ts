@@ -10,9 +10,18 @@ import { PaymentsModule } from './payments/payments.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { AddressModule } from './address/address.module';
 import { ReviewsModule } from './reviews/reviews.module';
-// ⬇️ YANGI QUSHILDI
 import { CategoriesModule } from './categories/categories.module';
 import { ProductImagesModule } from './product-images/product-images.module';
+
+TypeOrmModule.forRoot({
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  autoLoadEntities: true,
+  synchronize: true,
+})
 
 @Module({
   imports: [
@@ -43,7 +52,6 @@ import { ProductImagesModule } from './product-images/product-images.module';
     ShippingModule,
     AddressModule,
     ReviewsModule,
-    // ⬇️ YANGI MODULLAR
     CategoriesModule,
     ProductImagesModule,
   ],
