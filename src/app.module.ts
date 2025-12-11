@@ -13,16 +13,6 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductImagesModule } from './product-images/product-images.module';
 
-TypeOrmModule.forRoot({
-  type: 'postgres',
-  url: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  autoLoadEntities: true,
-  synchronize: true,
-})
-
 @Module({
   imports: [
     ConfigModule.forRoot({
