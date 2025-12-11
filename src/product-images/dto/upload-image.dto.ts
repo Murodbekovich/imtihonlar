@@ -13,7 +13,6 @@ export class ProductImagesService {
   ) {}
 
   async upload(productId: number, filename: string, isPrimary: boolean = false) {
-    // Agar bu primary bo'lsa, oldingi primaryni o'chirish
     if (isPrimary) {
       await this.repo.update(
         { product: { id: productId }, isPrimary: true },

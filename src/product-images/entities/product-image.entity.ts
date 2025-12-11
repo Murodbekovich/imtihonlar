@@ -10,7 +10,7 @@ export class ProductImageEntity {
   url: string;
 
   @Column({ default: false })
-  isPrimary: boolean; // Asosiy rasm
+  isPrimary: boolean;
 
   @ManyToOne(() => ProductEntity, (product) => product.images, {
     onDelete: 'CASCADE',

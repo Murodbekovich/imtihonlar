@@ -5,13 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-// ⬇️ YANGI IMPORTLAR
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as express from 'express';
 
 async function bootstrap() {
-  // ⬇️ OZGARTI: AppModule -> NestExpressApplication
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const configService = app.get(ConfigService);
@@ -20,7 +18,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors();
 
-  // ⬇️ YANGI: Static files uchun
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   app.useGlobalPipes(

@@ -13,7 +13,6 @@ export class ProductImagesService {
   ) {}
 
   async upload(productId: number, filename: string, isPrimary: boolean = false) {
-    // Agar bu primary bo'lsa, oldingi primaryni o'chirish
     if (isPrimary) {
       await this.repo.update(
         { product: { id: productId }, isPrimary: true },
@@ -47,13 +46,11 @@ export class ProductImagesService {
       throw new NotFoundException('Image not found');
     }
 
-    // Boshqa rasmlarni primary emas qilish
     await this.repo.update(
       { product: { id: image.product.id }, isPrimary: true },
       { isPrimary: false },
     );
 
-    // Bu rasmni primary qilish
     image.isPrimary = true;
     return this.repo.save(image);
   }
@@ -64,7 +61,6 @@ export class ProductImagesService {
       throw new NotFoundException('Image not found');
     }
 
-    // Faylni diskdan o'chirish
     const filePath = path.join(process.cwd(), 'uploads', path.basename(image.url));
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
