@@ -1,12 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, OneToMany, CreateDateColumn, } from 'typeorm';
 import { OrderEntity } from '../../orders/entities/order.entity';
 import { CategoryEntity } from '../../categories/entities/category.entity';
 import { ProductImageEntity } from '../../product-images/entities/product-image.entity';

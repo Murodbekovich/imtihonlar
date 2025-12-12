@@ -46,4 +46,4 @@ import { ProductImagesModule } from './product-images/product-images.module';
     ProductImagesModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
